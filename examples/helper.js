@@ -4,19 +4,22 @@ var path = require('path'),
 	util = require('util'),
 	should = require('should'),
 	async = require('async'),
+	// TODO : Remove this, this is connected to the app
 	config = require('./../config/config.js'),
-	TestHelper = require('./tests-helper.js'),
-	SequelizeStrategy = require('./tests-helper-sequelize-strategy.js'),
+	TestHelper = require('../index.js').TestHelper,
+	SequelizeStrategy = require('../lib/storage-strategies/sequelize-strategy.js'),
+	// TODO : Remove this, this is connected to the app
 	utils = require(path.resolve('./app/utilities.server'));
 
 function AppTestStrategy() {
 
+	// TODO :Change this to something less connected to the app
 	var dbStrategy = new SequelizeStrategy({
 		db: require('./../config/sequelize.js')
 	});
 
 	var agent = require('supertest').agent(require('../server'));
-	
+
 	// Setup the test helper for our use with the right DB Strategy
 	TestHelper.call(this,
 		dbStrategy,
@@ -127,7 +130,7 @@ AppTestStrategy.prototype.tests = {
 				if (res.error) {
 					return done(res.error, res);
 				}
-				
+
 				return done(e, res);
 			}
 
@@ -141,10 +144,10 @@ AppTestStrategy.prototype.tests = {
 			done = options;
 			options = null;
 		}
-		
+
 		// Supports ; or , separated array
 		if (typeof params === 'string') {
-			
+
 			// removes all white spaces
 			params = params.replace(/ /g, '');
 

@@ -5,7 +5,8 @@
 'use strict';
 
 var StorageStrategy = require('./lib/storage-strategy.js'),
-	TestHelper = require('./lib/nuts.js');
+	TestHelper = require('./lib/nuts.js'),
+	Utils = require('./lib/generators/utils.js');
 /*
  * Default singleton instance
  */
@@ -21,4 +22,9 @@ exports.TestHelper = TestHelper;
  */
 exports.StorageStrategy = StorageStrategy;
 
+// TODO - JP : Add the storage strategies implementations?
 
+/*
+ * Expose the generators utils
+ */
+exports.Utils = Utils;

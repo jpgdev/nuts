@@ -11,8 +11,9 @@
 var async = require('async'),
 	path = require('path'),
 	util = require('util'),
-	genUtils = require('./tests-helper-generators-utils'),
+	genUtils = require('../index.js').Utils,
 	faker = require('faker'),
+	// TODO : Remove this, this is connected to the app
 	utils = require(path.resolve('./app/utilities.server'));
 
 var generators = module.exports = {
