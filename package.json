@@ -1,5 +1,5 @@
 {
-  "name": "nuts.js",
+  "name": "TestHelper.js",
   "version": "1.0.0",
   "description": "A test helper to simplify model generation & api routing calls",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/jpgdev/nuts.git"
+    "url": "git+ssh://git@github.com/jpgdev/testhelper.git"
   },
   "keywords": [
     "tests",
@@ -19,9 +19,9 @@
   "author": "Jean-Philippe Goulet",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/jpgdev/nuts/issues"
+    "url": "https://github.com/jpgdev/testhelper/issues"
   },
-  "homepage": "https://github.com/jpgdev/nuts#readme",
+  "homepage": "https://github.com/jpgdev/testhelper#readme",
   "devDependencies": {
     "faker": "^3.0.1"
   }

@@ -1,12 +1,9 @@
-# Nuts.js
-
-### A test helper with a shitty name.
+# TestHelper.js
 
 This tools help simplify tests.
 
 - Help generating valid models using custom made generators.
 - Help encapsulating server calls
-- Other stuff
 
 _NOTE : This is a temp README file for now._
 

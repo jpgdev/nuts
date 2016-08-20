@@ -1,11 +1,11 @@
+'use strict';
+
 /*
  * Module dependencies
  */
 
-'use strict';
-
 var StorageStrategy = require('./lib/storage-strategy.js'),
-	TestHelper = require('./lib/nuts.js'),
+	TestHelper = require('./lib/lib.js'),
 	Utils = require('./lib/generators/utils.js');
 /*
  * Default singleton instance
