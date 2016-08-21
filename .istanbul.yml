@@ -1,2 +1,6 @@
+instrumentation:
+    include-all-sources: true
+    # NOTE : For now ignore the examples & the dynamic generator which is just an experimentation for now
+    excludes :  ['**/examples/**', '**/generators/dynamic-generator.js']
 reporting:
     dir: ./test/coverage
