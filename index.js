@@ -6,7 +6,8 @@
 
 var StorageStrategy = require('./lib/storage-strategy.js'),
 	TestHelper = require('./lib/lib.js'),
-	Utils = require('./lib/generators/utils.js');
+	Utils = require('./lib/generators/generators-utils.js');
+
 /*
  * Default singleton instance
  */

@@ -24,5 +24,8 @@
   "homepage": "https://github.com/jpgdev/testhelper#readme",
   "devDependencies": {
     "faker": "^3.0.1"
+  },
+  "dependencies": {
+    "async": "^2.0.1"
   }
 }
