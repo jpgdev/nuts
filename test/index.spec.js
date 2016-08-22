@@ -18,6 +18,6 @@ describe('Package Index', () => {
     });
 
     it('should expose the Utilities', () => {
-        TestHelper.Utils.should.be.an.Object();
+        TestHelper.Utils.should.be.a.Function();
     });
 });
