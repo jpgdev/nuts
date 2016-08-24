@@ -4,7 +4,7 @@ const StorageStrategy = require('../lib/storage-strategy.js'),
     should = require('should');
 
 describe('Storage Strategy', function() {
-    let storateStrategy = new StorageStrategy();
+    const storateStrategy = new StorageStrategy();
 
     describe('#clearSessions()', () => {
         it('should throw an error since it is not implemented', () => {

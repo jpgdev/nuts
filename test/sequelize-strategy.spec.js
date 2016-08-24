@@ -5,6 +5,32 @@ const SequelizeStrategy = require('../lib/storage-strategies/sequelize-strategy.
     sinon = require('sinon');
 
 describe('Sequelize Strategy', () => {
+    let tableName = 'MyTable',
+        sequelizeStrategy,
+        fakeModel;
+
+    beforeEach(() => {
+        sequelizeStrategy = new SequelizeStrategy({
+            db: {}
+        });
+
+        fakeModel = {
+            destroy: sinon.stub()
+                .returns(new Promise((cb) => cb())),
+            create: sinon.stub()
+                .returns(new Promise((cb) => cb())),
+            bulkCreate: sinon.stub()
+                .returns(new Promise((cb) => cb())),
+        };
+
+        sinon.stub(sequelizeStrategy, '_getModel')
+            .withArgs(tableName)
+            .returns(fakeModel);
+    });
+
+    afterEach(() => {
+        sinon.restore();
+    });
 
     describe('SequelizeDBStrategy constructor', () => {
 
@@ -19,11 +45,11 @@ describe('Sequelize Strategy', () => {
         });
 
         it('should use the options.sessionModelName if provided', () => {
-            let sessionModelName = 'MySessionModelName';
-            let ss = new SequelizeStrategy({
-                db: {},
-                sessionModelName: sessionModelName
-            });
+            let sessionModelName = 'MySessionModelName',
+                ss = new SequelizeStrategy({
+                    db: {},
+                    sessionModelName: sessionModelName
+                });
 
             should.equal(ss._sessionModelName, sessionModelName);
         });
@@ -39,97 +65,72 @@ describe('Sequelize Strategy', () => {
 
     describe('#_getModel()', () => {
 
-        let sequelizeStrategy;
+        let sequelizeStrategy,
+            firstTableName = 'FirstTable',
+            secondTableName = 'SecondTable';
+
         beforeEach(() => {
-            let options = {
-                db: {
-                    MyTable: {
-                        name: 'MyTable'
+
+            let fakeDb = {
+                    [firstTableName]: {
+                        name: firstTableName
                     },
                     sequelize: {
                         models: {
-                            MyTable: {
-                                name: 'MyTable'
-                            },
-                            MyOtherTable: {
-                                name: 'MyOtherTable'
+                            [secondTableName]: {
+                                name: secondTableName
                             }
 
                         }
                     }
-                }
-            };
+                },
+                options = {
+                    db: fakeDb
+                };
+
             sequelizeStrategy = new SequelizeStrategy(options);
         });
 
         it('should get the model from the db object', () => {
-            let model = sequelizeStrategy._getModel('MyTable');
+            let model = sequelizeStrategy._getModel(firstTableName);
 
-            should.equal(sequelizeStrategy._db.MyTable, model);
+            should.equal(sequelizeStrategy._db[firstTableName], model);
         });
 
-        it('should check in the sequelize.models objects if the model can\'t be found at the root', () => {
-            let model = sequelizeStrategy._getModel('MyOtherTable');
 
-            should.equal(sequelizeStrategy._db.sequelize.models.MyOtherTable, model);
+        it('should check in the sequelize.models objects if the model can\'t be found at the root', () => {
+            let model = sequelizeStrategy._getModel(secondTableName);
+
+            should.equal(sequelizeStrategy._db.sequelize.models[secondTableName], model);
         });
 
     });
 
     describe('#clearSessions()', () => {
-        let sequelizeStrategy;
         let sessionModelName = 'MySessionsTable';
+
         beforeEach(() => {
-            sequelizeStrategy = new SequelizeStrategy({
-                db: {},
-                sessionModelName: sessionModelName
-            });
+            sequelizeStrategy._sessionModelName = sessionModelName;
         });
 
-        it('should be able to clear all sessions', (done) => {
+        it('should be able to clear all sessions', () => {
 
-            // Replace the 'clearTable' function which should be called with a stub
-            let clearTableStub = sinon.stub(sequelizeStrategy, 'clearTable', (modelName, cb) => {
-                should.equal(modelName, sessionModelName);
-                should.equal(clearTableStub.calledOnce, true);
-                sinon.assert.calledWith(clearTableStub);
+            let callback = () => {},
+                clearTableStub = sinon.stub(sequelizeStrategy, 'clearTable');
 
-                cb();
-            });
+            sequelizeStrategy.clearSessions(callback);
 
-            sequelizeStrategy.clearSessions(() => done());
+            should.equal(clearTableStub.calledOnce, true);
+            should.equal(clearTableStub.calledWith(sessionModelName, callback), true);
         });
     });
 
     describe('#clearTable()', () => {
 
-        let sequelizeStrategy;
-        beforeEach(() => {
-            sequelizeStrategy = new SequelizeStrategy({
-                db: {
-                    sequelize: {
-                        models: {}
-                    }
-                }
-            });
-        });
+        it('should call the destroy function on the model', () => {
+            sequelizeStrategy.clearTable(tableName, () => {});
 
-        it('should call the destroy function on the model', (done) => {
-
-            let tableName = 'MyTable';
-            let destroyStub = sinon.stub().returns(new Promise((cb) => cb()));
-
-            sequelizeStrategy._db[tableName] = {
-                destroy: destroyStub
-            };
-
-            sequelizeStrategy.clearTable(tableName, () => {
-                should.equal(destroyStub.calledOnce, true);
-                sinon.assert.calledWith(destroyStub, {
-                    where: {}
-                });
-                done();
-            });
+            should.equal(fakeModel.destroy.calledOnce, true);
         });
 
         it('should throw an error for a non-existing model', (done) => {
@@ -138,58 +139,27 @@ describe('Sequelize Strategy', () => {
                 err.message.should.match(/RandomModelName/);
                 done();
             });
-
         });
     });
 
     describe('#saveModel()', () => {
 
-        let sequelizeStrategy;
-        beforeEach(() => {
-            sequelizeStrategy = new SequelizeStrategy({
-                db: {
-                    sequelize: {
-                        models: {}
-                    }
-                }
-            });
-        });
-
-        it('should call the create function on the model', (done) => {
-
-            let tableName = 'MyTable';
+        it('should call the create function on the model', () => {
             let modelToSave = {
                 name: 'Paul',
                 age: 25
             };
-            let createStub = sinon.stub().returns(new Promise((cb) => cb()));
 
-            sequelizeStrategy._db[tableName] = {
-                create: createStub
-            };
+            sequelizeStrategy.saveModel(tableName, modelToSave, () => {});
 
-            sequelizeStrategy
-                .saveModel(tableName, modelToSave, () => {
-                    should.equal(createStub.calledOnce, true);
-                    sinon.assert.calledWith(createStub, modelToSave);
-                    done();
-                });
+            should.equal(fakeModel.create.calledOnce, true);
+            should.equal(fakeModel.create.calledWith(modelToSave), true);
         });
 
-        it('should not call the create function on the model if the date is empty', (done) => {
+        it('should not call the create function on the model if the data is empty', () => {
+            sequelizeStrategy.saveModel(tableName, null, () => {});
 
-            let tableName = 'MyTable';
-            let createStub = sinon.stub().returns(new Promise((cb) => cb()));
-
-            sequelizeStrategy._db[tableName] = {
-                create: createStub
-            };
-
-            sequelizeStrategy
-                .saveModel(tableName, null, () => {
-                    should.equal(createStub.callCount, 0);
-                    done();
-                });
+            should.equal(fakeModel.create.callCount, 0);
         });
 
         it('should throw an error for a non-existing model', (done) => {
@@ -204,20 +174,7 @@ describe('Sequelize Strategy', () => {
 
     describe('#saveModels()', () => {
 
-        let sequelizeStrategy;
-        beforeEach(() => {
-            sequelizeStrategy = new SequelizeStrategy({
-                db: {
-                    sequelize: {
-                        models: {}
-                    }
-                }
-            });
-        });
-
-        it('should call the bulkCreate function on the model', (done) => {
-
-            let tableName = 'MyTable';
+        it('should call the bulkCreate function on the model', () => {
             let modelsToSave = [{
                 name: 'Paul',
                 age: 25
@@ -226,37 +183,16 @@ describe('Sequelize Strategy', () => {
                 age: 35
             }];
 
-            let bulkCreateStub = sinon.stub().returns(new Promise((cb) => cb()));
+            sequelizeStrategy.saveModels(tableName, modelsToSave, () => {});
 
-            sequelizeStrategy._db[tableName] = {
-                bulkCreate: bulkCreateStub
-            };
-
-            sequelizeStrategy
-                .saveModels(tableName, modelsToSave, () => {
-                    should.equal(bulkCreateStub.calledOnce, true);
-                    sinon.assert.calledWith(bulkCreateStub, modelsToSave);
-                    done();
-                });
-
+            should.equal(fakeModel.bulkCreate.calledOnce, true);
+            should.equal(fakeModel.bulkCreate.calledWith(modelsToSave), true);
         });
 
-        it('should not call the bulkCreate function on the model if the data is empty', (done) => {
+        it('should not call the bulkCreate function on the model if the data is empty', () => {
+            sequelizeStrategy.saveModels(tableName, [], () => {});
 
-            let tableName = 'MyTable';
-
-            let bulkCreateStub = sinon.stub().returns(new Promise((cb) => cb()));
-
-            sequelizeStrategy._db[tableName] = {
-                bulkCreate: bulkCreateStub
-            };
-
-            sequelizeStrategy
-                .saveModels(tableName, [], () => {
-                    should.equal(bulkCreateStub.callCount, 0);
-                    done();
-                });
-
+            should.equal(fakeModel.bulkCreate.callCount, 0);
         });
 
         it('should throw an error for a non-existing model', (done) => {

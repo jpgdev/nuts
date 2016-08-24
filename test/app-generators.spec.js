@@ -9,7 +9,6 @@ describe('Examples Generators', () => {
     describe('#User', () => {
 
         it('should return the right amount of entities', (done) => {
-
             const nbUsers = 5;
             generators.User(nbUsers, {}, (err, users) => {
                 should.equal(users.length, nbUsers);
@@ -28,7 +27,7 @@ describe('Examples Generators', () => {
             });
         });
 
-        it('should have all the required field', (done) => {
+        it('should have all the required fields', (done) => {
 
             generators.User(1, {}, (err, users) => {
                 let user = users[0];
@@ -66,7 +65,6 @@ describe('Examples Generators', () => {
     describe('#Note', () => {
 
         it('should return the right amount of entities', (done) => {
-
             const nbNotes = 50;
             generators.Movie(nbNotes, {}, (err, notes) => {
                 should.equal(notes.length, nbNotes);
@@ -117,7 +115,6 @@ describe('Examples Generators', () => {
 
     describe('#Movie', () => {
         it('should return the right amount of entities', (done) => {
-
             const nbMovies = 26;
             generators.Movie(nbMovies, {}, (err, movies) => {
                 should.equal(movies.length, nbMovies);
