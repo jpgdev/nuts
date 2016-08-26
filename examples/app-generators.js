@@ -148,7 +148,9 @@ module.exports = {
 
             let imdbId = 'tt' + (Math.floor(Math.random() * 800000) + 100000);
             let releaseDate = faker.date.past();
-            let genres = faker.lorem.words(Math.max(0, nbGenres));
+            let genres = faker.lorem
+                .words(Math.max(0, nbGenres))
+                .split(' ');
 
             let media = {
                 title: faker.commerce.productName() + ' : The movie',

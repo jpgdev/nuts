@@ -33,6 +33,6 @@
   },
   "dependencies": {
     "async": "^2.0.1",
-    "faker": "^3.0.1"
+    "faker": "^3.1.0"
   }
 }
