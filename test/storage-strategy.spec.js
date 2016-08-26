@@ -1,6 +1,6 @@
 'use strict';
 
-const StorageStrategy = require('../lib/storage-strategy.js'),
+const StorageStrategy = require('../index.js').StorageStrategy,
     should = require('should');
 
 describe('Storage Strategy', function() {

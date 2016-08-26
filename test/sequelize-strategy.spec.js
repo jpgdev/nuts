@@ -1,6 +1,6 @@
 'use strict';
 
-const SequelizeStrategy = require('../lib/storage-strategies/sequelize-strategy.js'),
+const SequelizeStrategy = require('../index.js').Strategies.SequelizeStrategy,
     should = require('should'),
     sinon = require('sinon');
 

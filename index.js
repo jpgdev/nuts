@@ -23,7 +23,13 @@ exports.TestHelper = TestHelper;
  */
 exports.StorageStrategy = StorageStrategy;
 
-// TODO - JP : Add the storage strategies implementations?
+/*
+ * Expose the individuals storages strategies available
+ *  NOTE : Could/Should be made into a separate plugin?
+ */
+exports.Strategies = {
+    SequelizeStrategy : require('./lib/storage-strategies/sequelize-strategy.js')
+};
 
 /*
  * Expose the generators utils

@@ -1,6 +1,6 @@
 'use strict';
 
-const genUtils = require('../lib/generators/generators-utils.js'),
+const genUtils = require('../index.js').Utils,
     should = require('should');
 
 describe('Generator Utilities', () => {

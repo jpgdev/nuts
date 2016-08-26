@@ -17,6 +17,10 @@ describe('Package Index', () => {
         TestHelper.StorageStrategy.should.be.a.Function();
     });
 
+    it('should expose SequelizeDBStrategy', () => {
+        TestHelper.Strategies.SequelizeStrategy.should.be.a.Function();
+    });
+
     it('should expose the Utilities', () => {
         TestHelper.Utils.should.be.a.Function();
     });
