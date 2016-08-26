@@ -1,5 +1,5 @@
 {
-  "name": "TestHelper.js",
+  "name": "testhelper",
   "version": "1.0.0",
   "description": "A test helper to simplify model generation & api routing calls",
   "main": "index.js",
